@@ -151,8 +151,17 @@ When the user says `lint` or `health check`:
 2. Find orphan pages (no inbound links). List them.
 3. List concepts mentioned 3+ times across pages but lacking their own page.
 4. Check for stale claims that newer sources may have superseded.
-5. Suggest 3–5 new questions or sources to investigate.
-6. Append a lint entry to `wiki/log.md`.
+5. Check for broken `[[wikilinks]]` — links whose target page does not exist. List the source page and the dangling link.
+6. Suggest 3–5 new questions or sources to investigate.
+7. Append a lint entry to `wiki/log.md`.
+
+## Working With Images
+Markdown sources with inline images cannot be processed in a single pass — you must read the text first and then view referenced images separately.
+
+- Images live under `raw/assets/` (Obsidian's Web Clipper + "Download attachments for current file" hotkey will place them there automatically).
+- On ingest of an image-heavy source: (1) read the source's text, (2) identify which referenced images are load-bearing for the claims you are summarizing, (3) view those images with the Read tool using their `raw/assets/...` path, (4) incorporate what they show into the summary and any updated concept pages.
+- When an image is critical to a concept (diagram, chart, architecture figure), reference the asset path in the relevant wiki page so future sessions can re-view it.
+- Never copy images into `wiki/` — reference them from their `raw/assets/` location, since `raw/` is the source of truth.
 
 ## Log Format
 Each log entry MUST start with this prefix for parsability:
