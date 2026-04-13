@@ -53,7 +53,9 @@ The [[transformer]] uses multi-head attention in three places:
 2. **Masked decoder self-attention** — same, but with a mask blocking rightward attention.
 3. **Encoder-decoder cross-attention** — Q from the previous decoder layer, K and V from the encoder output.
 
-See `raw/assets/1706.03762-fig2-attention-mechanisms.pdf` (right panel).
+Figure 2 (right panel) shows h parallel scaled-dot-product attention layers fed by linear Q/K/V projections, their outputs concatenated and linearly projected:
+
+![[1706.03762-fig2-attention-mechanisms.pdf]]
 
 ## Sources
 

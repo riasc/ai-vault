@@ -26,7 +26,9 @@ where Q, K, V are query, key, and value matrices, and d_k is the dimension of th
 
 ## Mechanics
 
-Step by step (see `raw/assets/1706.03762-fig2-attention-mechanisms.pdf`, left panel):
+![[1706.03762-fig2-attention-mechanisms.pdf]]
+
+Step by step (Figure 2, left panel):
 
 1. **MatMul** — compute `QK^T` (pairwise dot products between each query and each key).
 2. **Scale** — divide by √d_k.

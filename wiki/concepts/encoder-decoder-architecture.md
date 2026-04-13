@@ -37,7 +37,9 @@ The [[transformer]] keeps the encoder-decoder pattern but replaces recurrence an
 2. **Decoder masked self-attention** — each decoder position attends to earlier decoder positions only.
 3. **Encoder-decoder cross-attention** — decoder queries attend over encoder keys/values, the "classic" attention role carried over from Bahdanau-style models.
 
-See the architecture diagram: `raw/assets/1706.03762-fig1-transformer-architecture.pdf`.
+The architecture diagram makes the encoder (left) and decoder (right) stacks — and the cross-attention link between them — clear:
+
+![[1706.03762-fig1-transformer-architecture.pdf]]
 
 ## Descendant variants (post-Transformer)
 

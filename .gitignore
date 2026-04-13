@@ -26,3 +26,8 @@ raw/transcripts/*
 !raw/transcripts/.gitkeep
 raw/assets/*
 !raw/assets/.gitkeep
+# Per-paper exception: Vaswani et al. 2017 figures.
+# The arXiv v7 tarball grants: "Provided proper attribution is provided,
+# Google hereby grants permission to reproduce the tables and figures in
+# this paper solely for use in journalistic or scholarly works."
+!raw/assets/1706.03762-*

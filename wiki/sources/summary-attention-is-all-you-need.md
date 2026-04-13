@@ -53,7 +53,11 @@ Each sub-layer is wrapped with a residual connection and layer normalization: `L
 
 **Embeddings:** shared weight matrix between input embeddings, output embeddings, and the pre-softmax projection. Multiplied by √d_model in the embedding layers.
 
-See `raw/assets/1706.03762-fig1-transformer-architecture.pdf`.
+![[1706.03762-fig1-transformer-architecture.pdf]]
+
+**Figure 2** — Scaled dot-product attention (left) and multi-head attention (right):
+
+![[1706.03762-fig2-attention-mechanisms.pdf]]
 
 ## Complexity comparison (Table 1)
 
@@ -110,11 +114,25 @@ A 4-layer Transformer with d_model=1024 trained on the WSJ portion of Penn Treeb
 
 ## Attention visualizations (appendix)
 
-The appendix shows individual attention heads at layer 5/6 learning distinct interpretable patterns:
+The appendix shows individual attention heads at layer 5/6 learning distinct interpretable patterns.
 
-- **Long-distance dependencies** — a head attends from `making` to `more difficult`, completing the phrasal verb across intervening tokens. See `raw/assets/1706.03762-long-distance-making-1.pdf` and `raw/assets/1706.03762-long-distance-making-2.pdf`.
-- **Anaphora resolution** — heads 5 and 6 sharply attend from the pronoun `its` to its antecedent. See `raw/assets/1706.03762-anaphora-resolution-1.pdf` and `raw/assets/1706.03762-anaphora-resolution-2.pdf`.
-- **Syntactic / semantic structure** — different heads learn to highlight different aspects of sentence structure. See `raw/assets/1706.03762-attention-heads-1.pdf` and `raw/assets/1706.03762-attention-heads-2.pdf`.
+**Long-distance dependencies** — a head attends from `making` to `more difficult`, completing the phrasal verb across intervening tokens:
+
+![[1706.03762-long-distance-making-1.pdf]]
+
+![[1706.03762-long-distance-making-2.pdf]]
+
+**Anaphora resolution** — heads 5 and 6 sharply attend from the pronoun `its` to its antecedent:
+
+![[1706.03762-anaphora-resolution-1.pdf]]
+
+![[1706.03762-anaphora-resolution-2.pdf]]
+
+**Syntactic / semantic structure** — different heads learn to highlight different aspects of sentence structure:
+
+![[1706.03762-attention-heads-1.pdf]]
+
+![[1706.03762-attention-heads-2.pdf]]
 
 These visualizations originated the "attention is interpretable" narrative that dominated transformer interpretability research for years.
 

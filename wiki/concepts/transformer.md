@@ -66,8 +66,13 @@ The masking in decoder self-attention prevents positions from attending to later
 
 ## Figures
 
-- Architecture diagram: `raw/assets/1706.03762-fig1-transformer-architecture.pdf` (Figure 1)
-- Attention mechanisms: `raw/assets/1706.03762-fig2-attention-mechanisms.pdf` (Figure 2)
+**Figure 1 — The Transformer model architecture:**
+
+![[1706.03762-fig1-transformer-architecture.pdf]]
+
+**Figure 2 — Scaled dot-product attention (left) and multi-head attention (right):**
+
+![[1706.03762-fig2-attention-mechanisms.pdf]]
 
 ## Sources
 

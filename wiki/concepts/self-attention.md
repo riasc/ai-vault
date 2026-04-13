@@ -48,7 +48,25 @@ The [[transformer]] uses self-attention in three contexts:
 
 ## Interpretability
 
-Attention visualizations from the Transformer paper (appendix) show individual heads at layer 5/6 learning interpretable behaviors: anaphora resolution, long-distance dependency tracking, and various syntactic/semantic patterns. See `raw/assets/1706.03762-anaphora-resolution-1.pdf`, `raw/assets/1706.03762-long-distance-making-1.pdf`, and related files. This paper originated the "attention is interpretable" narrative that dominated transformer interpretability research for years.
+Attention visualizations from the Transformer paper (appendix) show individual heads at layer 5/6 learning interpretable behaviors. This paper originated the "attention is interpretable" narrative that dominated transformer interpretability research for years.
+
+**Long-distance dependency resolution** — heads completing the phrasal verb "making ... more difficult" across intervening tokens:
+
+![[1706.03762-long-distance-making-1.pdf]]
+
+![[1706.03762-long-distance-making-2.pdf]]
+
+**Anaphora resolution** — heads 5 and 6 sharply attending from the pronoun "its" to its antecedent:
+
+![[1706.03762-anaphora-resolution-1.pdf]]
+
+![[1706.03762-anaphora-resolution-2.pdf]]
+
+**Different heads learning different syntactic/semantic patterns:**
+
+![[1706.03762-attention-heads-1.pdf]]
+
+![[1706.03762-attention-heads-2.pdf]]
 
 ## Sources
 
