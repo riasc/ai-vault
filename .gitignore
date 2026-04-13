@@ -24,3 +24,5 @@ raw/articles/*
 !raw/articles/.gitkeep
 raw/transcripts/*
 !raw/transcripts/.gitkeep
+raw/assets/*
+!raw/assets/.gitkeep
