@@ -17,38 +17,64 @@ confidence: high
 
 # Self-Attention
 
-**Self-attention** (also called *intra-attention*) is an [[attention-mechanism|attention]] mechanism in which the queries, keys, and values all come from the same sequence. Each position in the sequence attends to every other position (or every earlier position, in the masked case), producing a new representation that mixes information across positions.
+## Definition
 
-## Why it matters
+**Self-attention** (also called *intra-attention*) is an [[attention-mechanism|attention]] mechanism in which the queries, keys, and values all come from the same sequence. Each position produces a new representation by attending to every other position in that same sequence.
 
-Self-attention reduces the **maximum path length** between any two positions in a sequence to **O(1)**. For comparison (Table 1 in [[summary-attention-is-all-you-need]]):
+## Intuition
 
-| Layer | Complexity | Sequential ops | Max path length |
-| :--- | :--- | :--- | :--- |
-| Self-attention | O(n²·d) | O(1) | **O(1)** |
-| Recurrent | O(n·d²) | O(n) | O(n) |
-| Convolutional | O(k·n·d²) | O(1) | O(log_k n) |
-| Self-attention (restricted, window r) | O(r·n·d) | O(1) | O(n/r) |
+A recurrent layer relates position 1 to position n by propagating information through all intermediate positions — O(n) sequential steps, O(n) path length. A convolutional layer relates them faster but still needs multiple layers. Self-attention relates them **directly, in a single layer**, with O(1) maximum path length between any two positions.
 
-Short paths make long-range dependencies easier to learn — a long-standing challenge in sequence modeling (Hochreiter et al., 2001). When n < d (typical for sentence-level NMT with byte-pair or word-piece tokenization), self-attention is also *faster* than recurrent layers.
+Short paths make long-range dependencies easier to learn (Hochreiter et al. 2001). That's the theoretical core of the argument; empirically, it shows up as better BLEU and much faster training.
+
+## Formulation
+
+Given an input sequence represented as a matrix $X \in \mathbb{R}^{n \times d_{model}}$, self-attention computes Q, K, V as learned linear projections of the same $X$:
+
+$$Q = X W^Q, \quad K = X W^K, \quad V = X W^V$$
+
+Then applies [[scaled-dot-product-attention]]:
+
+$$\mathrm{SelfAttention}(X) = \mathrm{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V$$
+
+In the [[transformer]] this is almost always combined with [[multi-head-attention]] — h parallel self-attention operations on different learned projections, concatenated and projected back.
+
+## Variants
+
+- **Unmasked self-attention** — every position attends to every other position. Used in the Transformer's *encoder*.
+- **Masked (causal) self-attention** — position $i$ attends only to positions $\leq i$. Illegal softmax logits are set to $-\infty$. Used in the *decoder* to preserve auto-regressive generation.
+- **Restricted / windowed self-attention** — each position attends only within a local window of size $r$, reducing complexity from $O(n^2 d)$ to $O(r n d)$ at the cost of max path length $O(n/r)$. Mentioned in the original paper as future work; realized in Longformer, Sparse Transformer, etc.
+- **Cross-attention** — strictly not "self" (Q comes from one sequence, K/V from another), but mechanically identical. Used in the Transformer's encoder-decoder bridge.
 
 ## Tradeoffs
 
-- **Quadratic memory/compute in n** — the n×n attention matrix. This is the main practical limitation for long contexts and drives research on efficient attention (Longformer, sparse attention, Flash Attention, state-space models).
-- **Position-agnostic** — self-attention alone has no notion of order; [[positional-encoding]] must be added.
+- **Quadratic memory and compute in $n$** — the $n \times n$ attention matrix dominates cost at long contexts. This is the single biggest practical limitation and drives a whole research area on efficient attention (Flash Attention, sparse/linear variants, state-space models).
+- **Position-agnostic** — self-attention alone treats its input as a set, not a sequence. [[positional-encoding]] must be added to distinguish word order.
 - **Reduced effective resolution** — averaging attention-weighted positions can blur local detail. [[multi-head-attention]] was introduced in part to compensate.
+- **Softmax saturation at high dimensions** — motivates the $\sqrt{d_k}$ scaling, see [[scaled-dot-product-attention]].
 
-## Use in the Transformer
+**Complexity comparison (Table 1 of the paper):**
 
-The [[transformer]] uses self-attention in three contexts:
+| Layer | Complexity per layer | Sequential ops | Max path length |
+| :--- | :--- | :--- | :--- |
+| Self-attention | $O(n^2 \cdot d)$ | $O(1)$ | $\mathbf{O(1)}$ |
+| Recurrent | $O(n \cdot d^2)$ | $O(n)$ | $O(n)$ |
+| Convolutional | $O(k \cdot n \cdot d^2)$ | $O(1)$ | $O(\log_k n)$ |
+| Self-attention (restricted, window $r$) | $O(r \cdot n \cdot d)$ | $O(1)$ | $O(n/r)$ |
 
-1. **Encoder self-attention** — every encoder position attends to every other encoder position.
-2. **Masked decoder self-attention** — each decoder position attends only to positions ≤ itself, preserving the auto-regressive property. Masking is implemented by setting illegal softmax logits to −∞.
-3. **Encoder-decoder cross-attention** — strictly not "self" (queries from the decoder, keys/values from the encoder), but mechanically identical.
+Self-attention is also *faster* than recurrent layers when $n < d$ — typical for sentence-level NMT with byte-pair or word-piece tokenization.
 
-## Interpretability
+## History & Lineage
 
-Attention visualizations from the Transformer paper (appendix) show individual heads at layer 5/6 learning interpretable behaviors. This paper originated the "attention is interpretable" narrative that dominated transformer interpretability research for years.
+**Precursors:** the term "intra-attention" shows up in Cheng et al. 2016 (LSTMs for machine reading), Parikh et al. 2016 (decomposable attention for NLI), Lin et al. 2017 (structured self-attentive sentence embeddings), and Paulus et al. 2017 (abstractive summarization). All used self-attention inside recurrent or otherwise mixed architectures.
+
+**Decisive step:** the [[transformer]] is the first sequence transduction model built *entirely* on self-attention, with no recurrence or convolution. That's the specific contribution of [[summary-attention-is-all-you-need|Vaswani et al. 2017]].
+
+**Descendants:** efficient attention (Flash Attention, Longformer, BigBird, Performer, linear attention), state-space alternatives (Mamba, S4 — which partially replace self-attention with convolution-like structure for long contexts), and every variant of the transformer used in modern LLMs.
+
+## Figures
+
+The attention visualizations in the appendix of the source paper show individual heads at layer 5/6 of the encoder learning interpretable self-attention patterns. This is the origin of the "attention is interpretable" narrative that dominated transformer interpretability research for years.
 
 **Long-distance dependency resolution** — heads completing the phrasal verb "making ... more difficult" across intervening tokens:
 

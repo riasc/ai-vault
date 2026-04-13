@@ -122,6 +122,104 @@ date: YYYY-MM-DD
 ---
 ```
 
+## Page Body Templates
+
+Every page follows a fixed section layout below its frontmatter. Skip sections that don't apply to a given page (do not write a section just to fill it), but do not invent new top-level sections — if you need to add one that isn't in the template, update this file first so future sessions stay aligned.
+
+### Concept Page Body
+
+```markdown
+# {Concept Name}
+
+## Definition
+One or two plain-language sentences: what this thing *is*, mechanically. A reader should understand the concept from this section alone before reading further.
+
+## Intuition
+The problem it solves, the core insight, and why this concept exists. Paragraph form. This is where you explain the "aha" — what makes this concept interesting relative to what came before.
+
+## Formulation
+Math, pseudo-code, or precise mechanical description. Use LaTeX via `$...$` for inline and `$$...$$` for display. Omit the section if the concept is too abstract for a formulation (e.g. a broad umbrella concept).
+
+## Variants
+Subspecies, generalizations, alternative implementations, or named members of a family. Bulleted.
+
+## Tradeoffs
+Limitations, failure modes, when not to use, complexity costs, scaling issues. Honest downsides go here, not buried elsewhere.
+
+## History & Lineage
+Where it came from (predecessors, motivating prior work) and what came after (descendants, successors, displacements). Can link forward to concepts not yet ingested.
+
+## Figures
+Obsidian `![[...]]` embeds with brief captions. Omit if the concept has no load-bearing figure.
+
+## Sources
+- [[source1]]
+- [[source2]]
+```
+
+### Entity Page Body
+
+```markdown
+# {Entity Name}
+
+## What / Who
+One or two sentences: role, affiliation, what this entity is. For a person: their role and institutional context. For an org: what they do. For a benchmark, dataset, or product: what it is and what it measures/provides.
+
+## Significance
+Why this entity matters to the wiki's domain. The concrete contribution, role, or position. For people, this is where claims-to-fame go. For orgs, institutional relevance. For benchmarks, what they're used to measure and by whom.
+
+## Timeline / Notable Work
+Key dates, publications, products, or decisions, bulleted. Keep it short — this page should grow as more sources arrive, not on the first mention.
+
+## Relationships
+Wikilinks to closely-related entities and concepts, with a one-line note on the relationship.
+
+## Sources
+- [[source1]]
+- [[source2]]
+```
+
+### Source Summary Page Body
+
+```markdown
+# {Source Title}
+
+**{Author line}** — {venue}, {year}. {One-line hook describing what this source does or argues.}
+
+## Abstract
+A paraphrase of the source's own abstract or thesis. Do not copy verbatim — summarize in your own words so future sessions can quote safely.
+
+## Key Contributions
+Numbered list of the main claims or contributions, each with a wikilink to the relevant concept page.
+
+## Method
+What the source actually does — architecture, experimental setup, methodology, dataset, or argument structure. The "how."
+
+## Results
+Empirical findings, headline numbers, tables (reproduce small ones inline), charts. Use concrete numbers, not vague descriptions.
+
+## Discussion
+The source's own interpretation of its results — ablations, caveats, limitations the authors acknowledge, failure cases.
+
+## Figures
+Embedded figures with brief captions. Use `![[...]]` syntax.
+
+## Historical Context
+How this source fits into the broader timeline of the field. What it responds to, what it enables, which later work builds on it. This is often the highest-value section for cross-referencing.
+
+## Provenance
+- **Source file:** `raw/papers/{filename}` (or similar)
+- **Version / arXiv ID:** if applicable
+- **License / copyright notes:** any reproduction grants or restrictions worth recording for future ingests
+
+## Related
+Wikilinks to all concept, entity, and other source pages that connect to this source.
+```
+
+### Comparison & Synthesis Page Bodies
+
+For `wiki/comparisons/` and `wiki/syntheses/` pages (filed from query answers), follow the same spirit: open with a Definition-equivalent framing sentence, then a clearly labeled body, then a `## Sources` section with wikilinks. These pages are more free-form because they answer specific questions, but they should still always start with a clear framing and end with source citations.
+
 ## Wikilink Syntax
 Use Obsidian wikilinks (`[[Page Title]]`), not standard markdown links (`[text](path.md)`). Standard markdown links break Obsidian's graph view and backlink engine.
 

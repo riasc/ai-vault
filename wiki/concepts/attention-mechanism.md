@@ -15,34 +15,47 @@ confidence: high
 
 # Attention Mechanism
 
-An **attention function** maps a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is a weighted sum of the values, with the weights computed by a compatibility function between the query and each key.
+## Definition
 
-Formally, for a single query q over keys `{k_i}` and values `{v_i}`:
+An **attention function** maps a query and a set of key-value pairs to an output. The output is a weighted sum of the values, where the weight on each value is computed by a compatibility function between the query and the corresponding key.
 
-```
-Output = Σ_i softmax(compat(q, k_i)) · v_i
-```
+## Intuition
 
-## Origin (pre-Transformer)
+Attention lets a model relate two positions in a sequence **in a single step**, regardless of how far apart they are. This bypasses the sequential bottleneck of recurrent models (which must propagate information through O(n) intermediate hidden states) and the receptive-field bottleneck of convolutional models (which need multiple layers to cover long distances). It is the key primitive that made the [[transformer]] possible.
 
-Attention mechanisms emerged in neural machine translation to let a decoder focus on different parts of an encoded source sentence at each output step:
+## Formulation
 
-- **Bahdanau attention** (2014) — additive attention: `compat(q, k) = v^T tanh(W_q q + W_k k)`. Originally used inside RNN encoder-decoders for NMT.
-- **Luong attention** (2015) — multiple variants (dot-product, general, concat).
+For a single query $q$ over keys $\{k_i\}$ and values $\{v_i\}$:
 
-The key property is that attention lets the model relate positions at arbitrary distance in a single step, bypassing the sequential bottleneck of recurrence.
+$$\mathrm{Output} = \sum_i \mathrm{softmax}(\mathrm{compat}(q, k_i)) \cdot v_i$$
+
+In matrix form with queries $Q$, keys $K$, values $V$:
+
+$$\mathrm{Attention}(Q, K, V) = \mathrm{softmax}(\mathrm{compat}(Q, K)) \cdot V$$
+
+The different attention variants correspond to different choices of `compat`.
 
 ## Variants
 
-- **Additive attention** — compatibility function uses a small feed-forward network with a single hidden layer.
-- **Dot-product attention** — `compat(q, k) = q · k`. Much faster in practice than additive because it reduces to matrix multiplication.
-- **[[scaled-dot-product-attention]]** — dot-product divided by √d_k to prevent softmax saturation at high dimensions.
-- **[[self-attention]]** — queries, keys, and values all come from the same sequence.
-- **[[multi-head-attention]]** — multiple attention functions run in parallel on different learned projections.
+- **Additive attention** (Bahdanau 2014) — `compat(q, k) = v^T tanh(W_q q + W_k k)`. Uses a small feed-forward network with one hidden layer. Originally used inside RNN encoder-decoders for NMT.
+- **Dot-product attention** (Luong 2015) — `compat(q, k) = q · k`. Faster in practice than additive because it reduces to matrix multiplication.
+- **[[scaled-dot-product-attention]]** (Vaswani 2017) — dot-product divided by $\sqrt{d_k}$ to prevent softmax saturation at high dimensions. The attention primitive used in the Transformer.
+- **[[self-attention]]** — a *usage pattern*, not a compat function: Q, K, V all come from the same sequence.
+- **[[multi-head-attention]]** — another usage pattern: run h attention operations in parallel on learned projections, concatenate, and project back.
 
-## Why scale dot-product attention?
+## Tradeoffs
 
-Additive and dot-product attention have similar theoretical complexity, but dot-product is faster in practice. However, for large d_k the dot products grow in magnitude (variance scales as d_k), pushing the softmax into saturated regions where gradients vanish. Dividing by √d_k restores variance-1 conditions and keeps the softmax in its usable range. This is the central trick in the [[transformer]]'s attention.
+- **Compatibility function complexity affects quality.** Row (B) of Table 3 in the Transformer paper shows that reducing $d_k$ hurts BLEU, suggesting dot-product compatibility is not trivially expressive. More expressive compat functions (like additive) can do better at small $d_k$, at the cost of speed.
+- **Quadratic in sequence length** when used as [[self-attention]] — the attention matrix is n×n. This is the main scaling limitation for modern LLMs.
+- **Position-agnostic** — attention treats inputs as a set of (key, value) pairs. Any notion of order must be encoded separately (e.g. [[positional-encoding]]).
+
+## History & Lineage
+
+**Origin:** Bahdanau, Cho, Bengio (2014) introduced additive attention inside an RNN encoder-decoder for neural machine translation. The goal was to let the decoder focus on different parts of the source sentence at each output step, rather than compressing the entire source into a single fixed-length vector.
+
+**Evolution:** Luong et al. (2015) simplified to dot-product variants. Parikh et al. (2016, "A Decomposable Attention Model") showed attention without recurrence for natural language inference. [[summary-attention-is-all-you-need|Vaswani et al. (2017)]] took the decisive step of building a whole model out of attention — no recurrence, no convolution.
+
+**Descendants:** after 2017, "attention" in ML almost always means [[scaled-dot-product-attention]] inside a [[transformer]]. More recent work focuses on efficient attention (Flash Attention, linear attention, Performer, sparse patterns) or alternative primitives that partially replace it (state-space models like Mamba).
 
 ## Sources
 

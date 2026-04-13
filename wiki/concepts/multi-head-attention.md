@@ -16,44 +16,57 @@ confidence: high
 
 # Multi-Head Attention
 
-**Multi-head attention** runs several [[scaled-dot-product-attention]] operations in parallel on different learned projections of Q, K, V, concatenates the outputs, and projects the result through one more linear layer.
+## Definition
 
-## Formula
+**Multi-head attention** runs $h$ [[scaled-dot-product-attention]] operations in parallel on different learned projections of $Q$, $K$, $V$, concatenates the outputs, and projects the result through one more linear layer.
 
-```
-MultiHead(Q, K, V) = Concat(head_1, ..., head_h) W^O
-head_i = Attention(Q W^Q_i, K W^K_i, V W^V_i)
-```
+## Intuition
 
-The projections are:
-- `W^Q_i, W^K_i ∈ R^{d_model × d_k}`
-- `W^V_i ∈ R^{d_model × d_v}`
-- `W^O ∈ R^{h·d_v × d_model}`
+A single attention function, by averaging over attention-weighted positions, smears together information from the whole sequence into one representation. If the model needs to attend to *one thing* at this position (e.g. the direct object of the verb), fine — but if it needs to attend to *several different things simultaneously* (direct object, subject agreement, prepositional phrase attachment, discourse coreference), a single attention head has to compromise.
 
-In the original [[transformer]] base model: **h=8**, **d_k = d_v = d_model/h = 64**, d_model = 512.
+Running $h$ heads in parallel, each on a lower-dimensional projection of the same $Q$, $K$, $V$, lets the model **jointly attend to information from different representation subspaces at different positions**. Because each head uses dimension $d_{model}/h$ rather than $d_{model}$, the total compute is comparable to a single full-dimensional head — multi-head is effectively "free" in FLOPs.
 
-## Why multiple heads?
+Empirically, the different heads specialize: some track syntactic structure, some resolve anaphora, some span long-range dependencies. This specialization is visible in the attention visualizations referenced in [[self-attention]].
 
-A single attention function, by averaging over attention-weighted positions, smears together information from the whole sequence into a single representation. This limits the model's ability to attend to distinct kinds of relationships simultaneously. Running **h heads in parallel** on lower-dimensional projections lets the model **jointly attend to information from different representation subspaces at different positions**.
+## Formulation
 
-Because each head uses dimension d_model/h rather than d_model, the total compute is comparable to a single full-dimensional head — multi-head is effectively "free" in FLOPs relative to the single-head baseline.
+$$\mathrm{MultiHead}(Q, K, V) = \mathrm{Concat}(\mathrm{head}_1, \ldots, \mathrm{head}_h) W^O$$
 
-## Empirical behavior (Table 3 of the paper)
+$$\mathrm{head}_i = \mathrm{Attention}(Q W^Q_i, K W^K_i, V W^V_i)$$
 
-- Single-head (h=1) is **0.9 BLEU worse** than the best multi-head setting on WMT'14 En-De.
-- Quality also drops off with too many heads (h=32).
-- Reducing d_k hurts quality — suggests dot-product compatibility is not a trivially expressive function.
-- Individual heads in the trained model learn interpretable patterns: long-distance dependency completion, anaphora resolution, and various syntactic/semantic structure. See the attention-visualization figures referenced in [[summary-attention-is-all-you-need]].
+The projection matrices are:
+- $W^Q_i, W^K_i \in \mathbb{R}^{d_{model} \times d_k}$
+- $W^V_i \in \mathbb{R}^{d_{model} \times d_v}$
+- $W^O \in \mathbb{R}^{h \cdot d_v \times d_{model}}$
 
-## Use in the Transformer
+In the original [[transformer]] base model: **$h=8$**, **$d_k = d_v = d_{model}/h = 64$**, $d_{model} = 512$. In the big model, $h=16$ and $d_k = d_v = 64$ still.
 
-The [[transformer]] uses multi-head attention in three places:
+## Variants
 
-1. **Encoder self-attention** — all Q, K, V come from the previous encoder layer.
-2. **Masked decoder self-attention** — same, but with a mask blocking rightward attention.
-3. **Encoder-decoder cross-attention** — Q from the previous decoder layer, K and V from the encoder output.
+- **Multi-Query Attention (MQA)** — Shazeer 2019. All heads share a single $K$ and $V$ projection; only $Q$ is per-head. Dramatically reduces KV-cache memory for autoregressive inference at a small quality cost. Not in the source paper, but important downstream.
+- **Grouped-Query Attention (GQA)** — Ainslie et al. 2023. Compromise between full multi-head and MQA: groups of $Q$ heads share $K$/$V$. Used in Llama 2, Mistral, and most modern LLMs.
+- **Local multi-head attention** — heads with restricted windows (Longformer-style).
+- **Different head specializations** — not a different formula, but a research direction: analyzing which heads do what, pruning redundant heads, etc.
 
-Figure 2 (right panel) shows h parallel scaled-dot-product attention layers fed by linear Q/K/V projections, their outputs concatenated and linearly projected:
+## Tradeoffs
+
+- **KV-cache memory during inference.** Each head stores its own $K$ and $V$; at long contexts this dominates inference memory. MQA/GQA exist specifically to address this.
+- **Diminishing returns from more heads.** Row (A) of Table 3 shows single-head is **0.9 BLEU worse** than $h=8$ on WMT'14 En-De, but $h=32$ is also worse than $h=8$. There's an optimum, and it's not "more heads = always better."
+- **Reducing $d_k$ per head hurts quality.** Row (B) of Table 3 shows that making heads too narrow degrades BLEU — the dot-product compatibility function needs enough dimensionality to express rich patterns.
+- **FLOPs are ~free, memory is not.** Total compute is roughly constant across $h$ at fixed $d_{model}$, but the per-head $K$/$V$ storage scales with $h$.
+
+## History & Lineage
+
+**Attribution:** per the author footnote of [[summary-attention-is-all-you-need]], [[noam-shazeer|Noam Shazeer]] proposed multi-head attention along with [[scaled-dot-product-attention]] and the parameter-free position representation. These are arguably the three key technical innovations of the Transformer paper.
+
+**Descendants:**
+- MQA (Shazeer 2019) reduces heads on the K/V side for inference efficiency.
+- GQA (Ainslie 2023) is the current default compromise — used by Llama 2+, Mistral, and most modern LLMs.
+- Interpretability research on "which head does what" is a whole subfield (Clark et al. 2019, Voita et al. 2019, etc.).
+
+## Figures
+
+**Figure 2 (right panel) — Multi-Head Attention.** Shows $h$ parallel linear projections of $Q$, $K$, $V$, each fed into a scaled dot-product attention, then concatenated and linearly projected:
 
 ![[1706.03762-fig2-attention-mechanisms.pdf]]
 
