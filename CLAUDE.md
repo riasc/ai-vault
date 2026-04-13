@@ -10,6 +10,7 @@ AI/ML research, recent technologies, and learning material. Emphasis on understa
 - `wiki/log.md` — append-only activity log. Never delete entries.
 - `wiki/overview.md` — high-level synthesis. Revise after major ingests.
 - `wiki/hot.md` — session hot cache (~500 words). Read silently at session start BEFORE responding.
+- `wiki/reading-queue.md` — persistent backlog of candidate next ingests, surfaced from citations during prior ingests.
 - `CLAUDE.md` — this file. Re-read at the start of every session.
 
 ## Hot Cache (`wiki/hot.md`)
@@ -38,6 +39,33 @@ After every session (or when the user says `/close`), update `wiki/hot.md`:
 ```
 
 `wiki/hot.md` is the **only** wiki file you may write without an explicit ingest/query/lint trigger.
+
+## Reading Queue (`wiki/reading-queue.md`)
+
+A persistent backlog of candidate next ingests. Every ingest appends 3–6 new entries to this file based on the source's bibliography and obvious forward-looking gaps. The goal is to convert a paper's citations into a concrete, pre-vetted reading list rather than losing them into the void.
+
+**Structure:**
+
+```
+# Reading Queue
+
+## Queued
+- [ ] **{Authors, Year — Title}** ({arXiv ID / DOI / URL})
+  - Why: {one-line justification — why this paper matters in the context of what we've already ingested}
+  - Surfaced from: [[source-summary-page]]
+
+## Ingested
+- [x] **{Authors, Year — Title}** — ingested YYYY-MM-DD → [[source-summary-page]]
+
+## Skipped
+- [~] **{Authors, Year — Title}** — skipped YYYY-MM-DD. Reason: {one-line reason}
+```
+
+**Rules:**
+- Append-only in spirit. Move entries between sections rather than deleting.
+- Selection is opinionated: skip boring background, favor immediate precursors, key successors, and cross-references that build the web of concepts. A dense ingested paper might yield 40 citations; pick the 3–6 most valuable.
+- Populate `wiki/hot.md`'s "Open Questions" section by drawing the top 3–5 freshest queued entries from `reading-queue.md`. Don't maintain a separate list.
+- When an entry is ingested, move it to the `## Ingested` section with the date and a link to the resulting source summary page.
 
 ## Page Conventions
 Every wiki page MUST have YAML frontmatter. Use these schemas:
@@ -207,6 +235,9 @@ Embedded figures with brief captions. Use `![[...]]` syntax.
 ## Historical Context
 How this source fits into the broader timeline of the field. What it responds to, what it enables, which later work builds on it. This is often the highest-value section for cross-referencing.
 
+## Suggested Next Reads
+3–6 candidate follow-up ingests, drawn primarily from this source's bibliography but also including obvious forward-looking gaps (descendants the source does not cite because they postdate it). Each entry has a one-line "why it matters" justification. These entries are also appended to `wiki/reading-queue.md` as part of the ingest workflow.
+
 ## Provenance
 - **Source file:** `raw/papers/{filename}` (or similar)
 - **Version / arXiv ID:** if applicable
@@ -227,13 +258,14 @@ Use Obsidian wikilinks (`[[Page Title]]`), not standard markdown links (`[text](
 When the user says `ingest [filename]` or `ingest raw/[path]`:
 1. Read the source file from `raw/`.
 2. Discuss key takeaways with the user (3–5 bullet points).
-3. Create `wiki/sources/summary-{slug}.md` with a full summary using the source frontmatter schema.
+3. Create `wiki/sources/summary-{slug}.md` with a full summary using the source frontmatter schema and the source page body template (including the `## Suggested Next Reads` section).
 4. Update `wiki/index.md` — add the new page with a one-line summary.
 5. Update ALL relevant concept and entity pages with new information.
 6. If new info contradicts an existing page, flag it explicitly and demote the affected page's `confidence` to `low`.
 7. Create new concept/entity pages if the source introduces them.
-8. Append a structured entry to `wiki/log.md` (see Log Format below).
-9. A single ingest should typically touch 5–15 wiki pages.
+8. Append 3–6 candidate next reads to `wiki/reading-queue.md` under `## Queued`. These should match the `## Suggested Next Reads` section of the new source summary. If the source is itself in the queue, move it from `## Queued` to `## Ingested` with the date.
+9. Append a structured entry to `wiki/log.md` (see Log Format below).
+10. A single ingest should typically touch 5–15 wiki pages.
 
 ## Query Workflow
 When the user asks a question:

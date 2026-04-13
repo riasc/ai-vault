@@ -177,6 +177,26 @@ This paper is the origin point of the transformer revolution. Every modern LLM �
 - **[[ashish-vaswani|Ashish Vaswani]]** with Polosukhin designed and implemented the first Transformer models.
 - Listing order among the eight equally-contributing authors is explicitly random.
 
+## Suggested Next Reads
+
+Six candidate follow-up ingests. The first five are drawn from the paper's own bibliography; the sixth is a forward-looking descendant that postdates it. All six are mirrored in [[reading-queue|wiki/reading-queue.md]].
+
+**Precursors (cited by this paper):**
+
+1. **Bahdanau, Cho, Bengio 2014 — Neural Machine Translation by Jointly Learning to Align and Translate** ([arXiv:1409.0473](https://arxiv.org/abs/1409.0473)). The original attention mechanism. Vaswani 2017 positions itself as "attention without RNNs" — understanding Bahdanau attention first makes it clear why "dispensing with recurrence entirely" was the bold claim, not just the mechanics of attention.
+
+2. **Sutskever, Vinyals, Le 2014 — Sequence to Sequence Learning with Neural Networks** ([arXiv:1409.3215](https://arxiv.org/abs/1409.3215)). The foundational encoder-decoder paper. Defines the vocabulary ("encoder", "decoder", auto-regressive generation) that every subsequent paper assumes.
+
+3. **Luong, Pham, Manning 2015 — Effective Approaches to Attention-based Neural Machine Translation** ([arXiv:1508.04025](https://arxiv.org/abs/1508.04025)). Direct precursor to [[scaled-dot-product-attention]] — Vaswani's √d_k scaling is a small correction applied to Luong's dot-product formulation.
+
+4. **Ba, Kiros, Hinton 2016 — Layer Normalization** ([arXiv:1607.06450](https://arxiv.org/abs/1607.06450)). The normalization the Transformer wraps every sub-layer with. Clarifies later architectural decisions — pre-LN vs post-LN debates, RMSNorm, training stability at scale.
+
+5. **Shazeer et al. 2017 — Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer** ([arXiv:1701.06538](https://arxiv.org/abs/1701.06538)). Shazeer's prior work on conditional computation. Precursor to Switch Transformer, GLaM, and Mixtral. A good cross-reference for future MoE papers and a second exposure to the author credited with three of the Transformer's key innovations.
+
+**Forward-looking descendant (not cited — postdates this paper):**
+
+6. **Devlin, Chang, Lee, Toutanova 2018 — BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding** ([arXiv:1810.04805](https://arxiv.org/abs/1810.04805)). The first major encoder-only descendant. Shows how the Transformer moved beyond translation into general-purpose language representation. Natural next step for tracing the [[encoder-decoder-architecture]] fork into the encoder-only branch.
+
 ## Provenance
 
 - **Source file:** `raw/papers/1706.03762v7-attention-is-all-you-need.tar.gz` (arXiv v7 of 1706.03762, revised June 2023; originally submitted June 2017).
