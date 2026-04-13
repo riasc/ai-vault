@@ -16,3 +16,11 @@ node_modules/
 # Conda — if env is created in-tree
 .conda/
 envs/
+
+# Raw source material — not redistributable (copyright)
+raw/papers/*
+!raw/papers/.gitkeep
+raw/articles/*
+!raw/articles/.gitkeep
+raw/transcripts/*
+!raw/transcripts/.gitkeep
