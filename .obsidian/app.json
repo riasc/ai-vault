@@ -1,0 +1,13 @@
+{
+  "userIgnoreFilters": [
+    "node_modules/",
+    ".git/",
+    ".claude/",
+    "scripts/",
+    "environment.yml",
+    ".gitignore"
+  ],
+  "newFileLocation": "folder",
+  "newFileFolderPath": "raw/articles",
+  "attachmentFolderPath": "raw/assets"
+}

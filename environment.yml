@@ -1,0 +1,15 @@
+name: ai-wiki
+channels:
+  - conda-forge
+dependencies:
+  - nodejs>=20
+  - npm
+
+# After creating the env:
+#   conda env create -f environment.yml
+#   conda activate ai-wiki
+#   bash scripts/setup-cli-tools.sh
+#
+# The setup script installs the npm-based CLI tools that this vault uses:
+#   - @kepano/defuddle  (web-page cleaner for clean ingests)
+#   - @tobilu/qmd       (hybrid BM25 + semantic + LLM-rerank search)

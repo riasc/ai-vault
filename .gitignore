@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Obsidian — per-machine state (not portable across collaborators)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/workspace.json.bak
+.obsidian/cache/
+
+# Obsidian trash
+.trash/
+
+# Node
+node_modules/
+
+# Conda — if env is created in-tree
+.conda/
+envs/
