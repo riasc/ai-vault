@@ -94,6 +94,10 @@ The attention visualizations in the appendix of the source paper show individual
 
 ![[1706.03762-attention-heads-2.pdf]]
 
+## See also
+
+Self-attention is not the only way to mix information across positions. Sub-quadratic alternatives include the [[hyena-operator]] (input-dependent long convolution, used in [[striped-hyena-2]] and [[evo-2]]), state-space models (Mamba, S4), and various efficient-attention approximations (Flash Attention, Performer, Longformer). These matter most when the sequence length pushes self-attention's $O(n^2)$ cost into infeasible territory — DNA at 1M tokens is the canonical example.
+
 ## Sources
 
 - [[summary-attention-is-all-you-need]]

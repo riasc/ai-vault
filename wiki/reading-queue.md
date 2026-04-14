@@ -42,9 +42,32 @@ Append-only in spirit: move entries between sections rather than deleting. `hot.
   - **Why:** The first major encoder-only descendant. Shows how the Transformer moved beyond translation into general-purpose language representation. Natural next step for tracing the [[encoder-decoder-architecture]] fork into the encoder-only branch. Not cited by Vaswani 2017 (postdates it).
   - Surfaced from: [[summary-attention-is-all-you-need]] (forward-looking)
 
+### Evo 2 lineage (from Brixi et al. 2026 bibliography)
+
+- [ ] **Nguyen et al. 2024 — Sequence modeling and design from molecular to genome scale with Evo** (*Science* 386, eado9336)
+  - **Why:** The direct predecessor to [[evo-2]]. StripedHyena 1 architecture, 7B params, prokaryote/phage only, 131k context. Essential for understanding what Evo 2 changed (architectural upgrade to StripedHyena 2, expansion to eukaryotes, context extension to 1M). Without Evo 1, the Evo 2 contribution is hard to size.
+  - Surfaced from: [[summary-evo-2]]
+
+- [ ] **Ku et al. 2025 — Systems and algorithms for convolutional multi-hybrid language models at scale** ([arXiv:2503.01868](https://arxiv.org/abs/2503.01868))
+  - **Why:** Companion systems paper to [[striped-hyena-2]] / [[evo-2]]. Engineering details of how to train a 40B-parameter hybrid model at 1M context — fused kernels, parallelism strategies, throughput optimizations. The "how it was actually built" companion to the "what it does" Nature paper.
+  - Surfaced from: [[summary-evo-2]]
+
+- [ ] **Poli et al. 2023 — Hyena Hierarchy: Towards Larger Convolutional Language Models** (ICML 2023)
+  - **Why:** Original [[hyena-operator]] paper. Introduces the input-dependent long-convolution primitive that eventually grew into [[striped-hyena-2]]. Essential for understanding the architectural lineage and the rationale behind sub-quadratic attention alternatives.
+  - Surfaced from: [[summary-evo-2]]
+
+- [ ] **Cunningham, Ewart, Smith, Huben, Sharkey 2023 — Sparse Autoencoders Find Highly Interpretable Features in Language Models** ([arXiv:2309.08600](https://arxiv.org/abs/2309.08600))
+  - **Why:** Foundational SAE-for-interpretability paper. The technique Evo 2 uses for [[mechanistic-interpretability]] of biology, but applied originally to language models. Connects the wiki to the broader mech-interp research thread (Anthropic's Circuits work, Templeton et al. 2024 on Claude 3 Sonnet, etc.).
+  - Surfaced from: [[summary-evo-2]]
+
+- [ ] **Dalla-Torre et al. 2024 — Nucleotide Transformer: building and evaluating robust foundation models for human genomics** (*Nat. Methods* 22, 287–297)
+  - **Why:** The prior major [[dna-foundation-model]]. Evo 2 benchmarks against Nucleotide Transformer extensively (variant effect prediction, exon classification). Important context for what "competitive" means in this space pre-Evo 2.
+  - Surfaced from: [[summary-evo-2]]
+
 ## Ingested
 
 - [x] **Vaswani et al. 2017 — Attention Is All You Need** — ingested 2026-04-13 → [[summary-attention-is-all-you-need]]
+- [x] **Brixi et al. 2026 — Genome modelling and design across all domains of life with Evo 2** — ingested 2026-04-13 → [[summary-evo-2]]
 
 ## Skipped
 

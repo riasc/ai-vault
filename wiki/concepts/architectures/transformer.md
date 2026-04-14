@@ -79,6 +79,11 @@ Each sub-layer is wrapped as `LayerNorm(x + Sublayer(x))` — a residual connect
 
 **Descendants:** essentially every large language model since 2018. The encoder-only/decoder-only/encoder-decoder split above is the main architectural fork; within each, subsequent work has iterated on positional encoding (RoPE, ALiBi), attention efficiency (Flash Attention, MQA/GQA), normalization (pre-LN, RMSNorm), and scaling (Kaplan 2020, Chinchilla 2022).
 
+**Alternatives and challengers.** For very long sequences (megabases of DNA, multi-million-token contexts), pure-transformer architectures struggle with the $O(n^2)$ attention bottleneck. Hybrid and post-attention architectures have emerged as practical alternatives:
+- **[[striped-hyena-2|StripedHyena 2]]** — convolutional multi-hybrid combining [[hyena-operator]] variants with rotary attention. Used by [[evo-2]] for 1M-token DNA modeling. Up to 3× throughput speedup over transformers at 40B / 1M context (see [[summary-evo-2]]).
+- **State-space models** — Mamba, S4, and related architectures replace attention with selective state-space recurrences. Linear in sequence length.
+- **Linear / efficient attention** — Performer, Linformer, Flash Attention. Approximate or implementation-level fixes that stay within the transformer family.
+
 ## Figures
 
 **Figure 1 — The Transformer model architecture:**

@@ -26,3 +26,16 @@ Pages created (14): wiki/sources/summary-attention-is-all-you-need.md, wiki/conc
 Pages updated: wiki/index.md, wiki/overview.md, wiki/hot.md
 Contradictions flagged: none (first ingest, no prior claims to contradict)
 Notes: Read all .tex source files directly from extracted tarball (/tmp/attention-src/). Viewed Figure 1 and Figure 2 PDFs during ingest to ground architecture descriptions. Attention visualization PDFs referenced by path in self-attention and multi-head-attention concept pages; captions alone were sufficient for the summaries without individually rendering each file.
+
+## [2026-04-13] reorg | Wiki taxonomy subfolders
+Reorganized wiki/ into a kind-based taxonomy: concepts/{primitives,architectures,models,methods}, entities/{people,orgs,datasets}, sources/{year}. Moved all 14 existing pages from the Vaswani ingest into the new structure via git mv (history preserved). Updated CLAUDE.md with the taxonomy section, category definitions, edge-case rules, and the multi-file source subfolder convention for raw/papers/. Wikilinks unchanged — Obsidian resolves by filename, not path.
+
+## [2026-04-13] ingest | Genome modelling and design across all domains of life with Evo 2
+Source: raw/papers/evo2/ (multi-file source subfolder)
+  - s41586-026-10176-5_evo2.pdf (33 pages, 70 MB main paper)
+  - 41586_2026_10176_MOESM{1,4}_ESM.pdf (supplementary PDFs)
+  - 41586_2026_10176_MOESM{3,5}_ESM.xlsx (supplementary data tables)
+Pages created (12): wiki/sources/2026/summary-evo-2.md, wiki/concepts/models/evo-2.md, wiki/concepts/models/dna-foundation-model.md, wiki/concepts/architectures/striped-hyena-2.md, wiki/concepts/primitives/hyena-operator.md, wiki/concepts/methods/sparse-autoencoder.md, wiki/concepts/methods/mechanistic-interpretability.md, wiki/entities/orgs/arc-institute.md, wiki/entities/people/brian-hie.md, wiki/entities/people/patrick-hsu.md, wiki/entities/people/michael-poli.md, wiki/entities/datasets/opengenome2.md
+Pages updated: wiki/concepts/architectures/transformer.md (added "Alternatives and challengers" subsection linking to StripedHyena 2), wiki/concepts/primitives/self-attention.md (added "See also" section noting hyena/StripedHyena 2 alternatives), wiki/index.md, wiki/overview.md, wiki/hot.md, wiki/reading-queue.md
+Contradictions flagged: none (Evo 2 sits in a different domain from the Transformer paper — no overlap to contradict)
+Notes: Read main paper text via pdftotext (poppler installed via conda env, see environment.yml). Did not extract figures this round despite CC BY-NC-ND license permitting reproduction — flagged for follow-up. Supplementary PDFs read but not deeply incorporated. Multi-file source uses raw/papers/evo2/ subfolder, the new convention now documented in CLAUDE.md.

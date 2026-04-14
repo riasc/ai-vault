@@ -5,13 +5,49 @@ AI/ML research, recent technologies, and learning material. Emphasis on understa
 
 ## Project Structure
 - `raw/` — immutable source documents. **NEVER modify any file in `raw/`.**
-- `wiki/` — LLM-generated wiki. You own this layer entirely.
+  - `raw/papers/` — papers. Single-file papers live at the root; **multi-file sources (paper + supplementary materials + figures) get their own subfolder**, e.g., `raw/papers/evo2/`. Name single-file papers with the arXiv/DOI prefix (`1706.03762v7-attention-is-all-you-need.tar.gz`).
+  - `raw/articles/`, `raw/transcripts/`, `raw/assets/`, `raw/data/`, `raw/repos/` — other source types, same multi-file-subfolder convention applies.
+- `wiki/` — LLM-generated wiki. You own this layer entirely. See "Wiki Taxonomy" below for its internal structure.
 - `wiki/index.md` — master catalog. Update on EVERY ingest.
 - `wiki/log.md` — append-only activity log. Never delete entries.
 - `wiki/overview.md` — high-level synthesis. Revise after major ingests.
 - `wiki/hot.md` — session hot cache (~500 words). Read silently at session start BEFORE responding.
 - `wiki/reading-queue.md` — persistent backlog of candidate next ingests, surfaced from citations during prior ingests.
 - `CLAUDE.md` — this file. Re-read at the start of every session.
+
+## Wiki Taxonomy
+
+The wiki is organized by *kind of thing*, not by domain or topic. Domain organization happens naturally via Obsidian's graph (wikilinks), not via filesystem structure.
+
+```
+wiki/
+  concepts/
+    primitives/       # atomic operations you'd call as a function
+    architectures/    # named design patterns composing primitives into stacks
+    models/           # specific trained artifacts or model classes
+    methods/          # techniques, training recipes, interpretability, research areas
+  entities/
+    people/           # researchers, authors
+    orgs/             # companies, labs, research groups
+    datasets/         # datasets, benchmarks, evaluation suites
+  sources/
+    {year}/           # summary-{slug}.md grouped by publication year
+  comparisons/        # comparative analyses filed from queries
+  syntheses/          # higher-order syntheses filed from queries
+```
+
+**Category definitions:**
+- **primitive** — an atomic operation: something you'd call as a function or instantiate as a single layer. Examples: [[self-attention]], [[scaled-dot-product-attention]], [[multi-head-attention]], [[positional-encoding]], [[hyena-operator]], [[attention-mechanism]].
+- **architecture** — a named design pattern that composes primitives into a stack. Examples: [[transformer]], [[striped-hyena-2]], [[encoder-decoder-architecture]].
+- **model** — a specific trained artifact or a class of such artifacts. Examples: [[evo-2]], [[dna-foundation-model]], and future entries like BERT, GPT-3, Llama.
+- **method** — a technique, training recipe, interpretability approach, or research area that isn't itself an architecture or a primitive. Examples: [[sparse-autoencoder]], [[mechanistic-interpretability]], and future entries like scaling laws, RLHF, Flash Attention (as a technique, not an architecture).
+
+**Edge-case rules:**
+- When a concept straddles categories, pick the one that describes its *dominant* role. A technique that's also a small model (e.g., an SAE) goes in `methods/` if it's used as a lens on another model; it would go in `models/` if it's the object of study.
+- A *class* of models (like "DNA foundation model") goes in `models/` with a note that it's a class, not an instance. Specific instances link back to the class page.
+- If you're unsure where to file a new concept, ask the user before creating it.
+
+**Wikilinks resolve by filename, not path.** Moving a file between subfolders does not break `[[slug]]` links. Keep all link targets as bare slugs (`[[transformer]]`), never full paths.
 
 ## Hot Cache (`wiki/hot.md`)
 Read `wiki/hot.md` silently at the start of EVERY session, before responding. This file contains ~500 words of recent session context. Do not summarize it to the user — just use it to restore your operating context.

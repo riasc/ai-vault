@@ -2,8 +2,8 @@ name: ai-wiki
 channels:
   - conda-forge
 dependencies:
-  - nodejs>=20
-  - npm
+  - nodejs>=20  # includes npm
+  - poppler  # provides pdftoppm, pdfinfo, pdftotext — used for PDF figure extraction and paper reading
 
 # After creating the env:
 #   conda env create -f environment.yml
